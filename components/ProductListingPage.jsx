@@ -16,14 +16,14 @@ const InnerContainer = styled(Box)(({ theme }) => ({
   margin: "auto",
 }));
 
-function HomePage() {
+function ProductListingPage() {
   return (
     <Container>
       <InnerContainer>
-        <h1>Home Page</h1>
+        <h1>Product listing Page</h1>
       </InnerContainer>
     </Container>
   );
 }
 
-export default withAuth(HomePage);
+export default withAuth(ProductListingPage);
