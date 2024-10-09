@@ -13,7 +13,6 @@ import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { MuiFileInput } from "mui-file-input";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 const Container = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -56,13 +55,17 @@ const FooterText = styled(Typography)(({ theme }) => ({
   },
 }));
 
-function RegisterComponent({ setOpen }) {
+function RegisterComponent({ setOpen, setSnackbarStatus }) {
+  const [users, setUsers] = useState(() => {
+    const users_list = localStorage.getItem("users");
+    return users_list ? JSON.parse(users_list) : [];
+  });
   const [registerDetails, setRegisterDetails] = useState({
     name: "",
     email: "",
     password: "",
     gender: "",
-    image_file: {},
+    image_file: "",
   });
 
   const handleChange = (event) => {
@@ -73,11 +76,56 @@ function RegisterComponent({ setOpen }) {
     });
   };
 
+  console.log(users);
+  console.log(registerDetails);
+  const submitBtnHandler = (event) => {
+    event.preventDefault();
+    const isUserExist = users.find(
+      (user) => user.email === registerDetails.email
+    );
+    if (isUserExist) {
+      setSnackbarStatus({
+        status: "error",
+        isOpen: true,
+        message: "This email is already exists",
+      });
+      setRegisterDetails({
+        name: "",
+        email: "",
+        password: "",
+        gender: "",
+        image_file: {},
+      });
+    } else {
+      const updatedUsersList = [...users, registerDetails];
+      setUsers(updatedUsersList);
+      localStorage.setItem("users", JSON.stringify(updatedUsersList));
+      setRegisterDetails({
+        name: "",
+        email: "",
+        password: "",
+        gender: "",
+        image_file: {},
+      });
+      setSnackbarStatus({
+        status: "success",
+        isOpen: true,
+        message: "User registered successfully. Please log in to proceed.",
+      });
+      setOpen(false);
+    }
+  };
+
   return (
     <Container>
       <InnerContainer>
         <Heading>Register</Heading>
-        <Grid2 container spacing={2}>
+        <Grid2
+          component="form"
+          container
+          spacing={2}
+          onSubmit={submitBtnHandler}
+        >
           <Grid2 item size={{ xs: 12, sm: 12, md: 12 }}>
             <Input
               fullWidth
@@ -141,24 +189,20 @@ function RegisterComponent({ setOpen }) {
             </FormControl>
           </Grid2>
           <Grid2 item size={{ xs: 12, sm: 12, md: 12 }}>
-            <FileInput
+            <Typography>User Image*</Typography>
+            <TextField
               required
               fullWidth
               name="image_file"
-              value={registerDetails.image_file}
-              onChange={(newFile) => {
+              placeholder="Image"
+              onChange={(event) => {
+                const file = event.target.files[0];
                 setRegisterDetails({
                   ...registerDetails,
-                  image_file: newFile,
+                  image_file: file,
                 });
               }}
-              InputProps={{
-                inputProps: {
-                  accept: "image/*",
-                },
-                placeholder: "Image",
-                startAdornment: <AttachFileIcon />,
-              }}
+              type="file"
             />
           </Grid2>
           <Grid2 item size={{ xs: 12, sm: 12, md: 12 }}>

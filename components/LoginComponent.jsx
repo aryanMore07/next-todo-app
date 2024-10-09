@@ -40,6 +40,11 @@ const FooterText = styled(Typography)(({ theme }) => ({
 }));
 
 function LoginComponent({ setOpen }) {
+  const [users, setUsers] = useState(() => {
+    const users_list = localStorage.getItem("users");
+    return users_list ? JSON.parse(users_list) : [];
+  });
+
   const [loginDetails, setLoginDetails] = useState({
     email: "",
     password: "",
@@ -53,13 +58,22 @@ function LoginComponent({ setOpen }) {
     });
   };
 
+  const submitBtnHandler = (event) => {
+    event.preventDefault();
+  };
+
   console.log(loginDetails);
 
   return (
     <Container>
       <InnerContainer>
         <Heading>Login</Heading>
-        <Grid2 container spacing={2}>
+        <Grid2
+          component="form"
+          container
+          spacing={2}
+          onSubmit={submitBtnHandler}
+        >
           <Grid2 item size={{ xs: 12, sm: 12, md: 12 }}>
             <Input
               fullWidth
