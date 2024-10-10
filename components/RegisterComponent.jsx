@@ -76,8 +76,6 @@ function RegisterComponent({ setOpen, setSnackbarStatus }) {
     });
   };
 
-  console.log(users);
-  console.log(registerDetails);
   const submitBtnHandler = (event) => {
     event.preventDefault();
     const isUserExist = users.find(
@@ -87,7 +85,7 @@ function RegisterComponent({ setOpen, setSnackbarStatus }) {
       setSnackbarStatus({
         status: "error",
         isOpen: true,
-        message: "This email is already exists",
+        message: "This email already exists",
       });
       setRegisterDetails({
         name: "",

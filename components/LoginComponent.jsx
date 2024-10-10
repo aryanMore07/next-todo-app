@@ -1,6 +1,7 @@
 import { Box, Button, Grid2, TextField, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const Container = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -40,6 +41,7 @@ const FooterText = styled(Typography)(({ theme }) => ({
 }));
 
 function LoginComponent({ setOpen }) {
+  const router = useRouter();
   const [users, setUsers] = useState(() => {
     const users_list = localStorage.getItem("users");
     return users_list ? JSON.parse(users_list) : [];
@@ -60,9 +62,30 @@ function LoginComponent({ setOpen }) {
 
   const submitBtnHandler = (event) => {
     event.preventDefault();
+    const isUser = users.find((user) => user.email === loginDetails.email);
+    if (isUser) {
+      if (isUser.password === loginDetails.password) {
+        router.push("/");
+        localStorage.setItem("user_details", JSON.stringify(isUser));
+        setLoginDetails({
+          email: "",
+          password: "",
+        });
+      } else {
+        setSnackbarStatus({
+          status: "error",
+          isOpen: true,
+          message: "Password Incorrect!",
+        });
+      }
+    } else {
+      setSnackbarStatus({
+        status: "error",
+        isOpen: true,
+        message: "No user found!",
+      });
+    }
   };
-
-  console.log(loginDetails);
 
   return (
     <Container>
