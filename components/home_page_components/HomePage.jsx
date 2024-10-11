@@ -4,10 +4,10 @@ import { Box, Button, Grid2, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import LeftSideComponent from "./LeftSideComponent";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "@/lib/features/productSlice";
-import AddProductModel from "./AddProductModel";
 import ProductCard from "./card_widgets/ProductCard";
+import AddProductModel from "./AddProductModel";
 
 const Container = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -43,9 +43,10 @@ const Heading = styled(Typography)(({ theme }) => ({
 function HomePage() {
   const [open, setOpen] = useState(false);
   const { status, products } = useSelector((state) => state.products);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchProducts();
+    dispatch(fetchProducts());
   }, []);
 
   console.log(products);
@@ -61,7 +62,11 @@ function HomePage() {
             </Grid2>
             <Grid2 item size={{ xs: 8, sm: 8, md: 8 }}>
               <MiddleSideContainer>
-                <Stack direction="row" justifyContent="space-between">
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  sx={{ mb: 4 }}
+                >
                   <Heading>
                     Products {products.length > 0 ? `(${products.length})` : ""}
                   </Heading>
@@ -74,12 +79,22 @@ function HomePage() {
                     Add Product
                   </Button>
                 </Stack>
-                <Grid2 container>
-                  {products?.map((data) => {
-                    <Grid2 key={data_id} size={{ xs: 12, sm: 6, md: 4 }} item>
-                      <ProductCard data={data.id} />
-                    </Grid2>;
-                  })}
+                <Grid2 container spacing={2}>
+                  {products.length === 0 ? (
+                    <Typography sx={{fontSize: "25px"}}>To products found...</Typography>
+                  ) : (
+                    products?.map((data) => {
+                      return (
+                        <Grid2
+                          key={data._id}
+                          size={{ xs: 12, sm: 6, md: 6 }}
+                          item
+                        >
+                          <ProductCard data={data} />
+                        </Grid2>
+                      );
+                    })
+                  )}
                 </Grid2>
               </MiddleSideContainer>
             </Grid2>

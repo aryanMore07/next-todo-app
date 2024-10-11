@@ -67,7 +67,7 @@ function RegisterComponent({ setOpen, setSnackbarStatus }) {
     email: "",
     password: "",
     gender: "",
-    image_file: "",
+    image_file: {},
   });
 
   const handleChange = (event) => {
@@ -197,10 +197,16 @@ function RegisterComponent({ setOpen, setSnackbarStatus }) {
               placeholder="Image"
               onChange={(event) => {
                 const file = event.target.files[0];
-                setRegisterDetails({
-                  ...registerDetails,
-                  image_file: file,
-                });
+                if (file) {
+                  const fileReader = new FileReader();
+                  fileReader.onloadend = () => {
+                    setRegisterDetails({
+                      ...registerDetails,
+                      image_file: fileReader.result,
+                    });
+                  };
+                  fileReader.readAsDataURL(file);
+                }
               }}
               type="file"
             />

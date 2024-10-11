@@ -49,7 +49,7 @@ const IconButtonComponent = styled(IconButton)(({ theme }) => ({
 
 function UserDetailsModel({ open, setOpen, userDetails }) {
   const handleClose = () => setOpen(false);
-
+console.log(userDetails)
   return (
     <Modal
       open={open}
@@ -66,7 +66,7 @@ function UserDetailsModel({ open, setOpen, userDetails }) {
           <Avatar
             sx={{ width: "70px", height: "70px" }}
             alt={userDetails.name}
-            src={userDetails.imgFile}
+            src={userDetails.image_file}
           />
         </Stack>
         <Grid2 container spacing={2}>

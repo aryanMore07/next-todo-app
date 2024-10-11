@@ -65,6 +65,20 @@ function AddProductModel({ open, setOpen }) {
     setOpen(false);
   };
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const fileReader = new FileReader();
+      fileReader.onloadend = () => {
+        setProductDetails((prevDetails) => ({
+          ...prevDetails,
+          image_file: fileReader.result,
+        }));
+      };
+      fileReader.readAsDataURL(file);
+    }
+  };
+
   const submitBtnHandler = (event) => {
     event.preventDefault();
     const updatedProductList = [...products, productDetails];
@@ -149,12 +163,7 @@ function AddProductModel({ open, setOpen }) {
               type="file"
               name="image_file"
               inputProps={{ accept: "image/*" }}
-              onChange={(event) => {
-                setProductDetails({
-                  ...productDetails,
-                  image_file: event.target.files[0].name,
-                });
-              }}
+              onChange={handleImageChange}
             />
           </Grid2>
           <Grid2 size={{ xs: 12, sm: 12, md: 12 }} item>
