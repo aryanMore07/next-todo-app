@@ -49,8 +49,6 @@ function HomePage() {
     dispatch(fetchProducts());
   }, []);
 
-  console.log(products);
-
   return (
     <>
       <AddProductModel open={open} setOpen={setOpen} />

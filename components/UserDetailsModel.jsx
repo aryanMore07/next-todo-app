@@ -49,7 +49,6 @@ const IconButtonComponent = styled(IconButton)(({ theme }) => ({
 
 function UserDetailsModel({ open, setOpen, userDetails }) {
   const handleClose = () => setOpen(false);
-console.log(userDetails)
   return (
     <Modal
       open={open}
