@@ -2,9 +2,11 @@
 import { navbar_context } from "@/utils/textUtils";
 import { Box, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
+import LogoutConfimationDialog from "./LogoutConfimationDialog";
+import UserDetailsModel from "./UserDetailsModel";
 
 const Container = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -14,8 +16,7 @@ const Container = styled(Box)(({ theme }) => ({
 }));
 
 const InnerContainer = styled(Box)(({ theme }) => ({
-  maxWidth: "1240px",
-  width: "95%",
+  width: "90%",
   height: "55px",
   margin: "auto",
   display: "flex",
@@ -43,45 +44,86 @@ const Link = styled(Typography)(({ theme }) => ({
 }));
 
 function Navbar() {
+  const [open, setOpen] = useState(false);
+  const [openLogoutConfirmationDialog, setOpenLogoutConfirmationDialog] =
+    useState(false);
+  const [userDetails, setUserDetails] = useState({});
   const router = useRouter();
+  const pathName = usePathname();
 
+  const handleOpen = () => setOpen(true);
 
   const handleLogoutBtn = () => {
-    // logout logic
+    setOpenLogoutConfirmationDialog(true);
   };
 
+  useEffect(() => {
+    const user = localStorage.getItem("user_details");
+    if (user) {
+      setUserDetails(JSON.parse(user));
+    }
+  }, [pathName]);
+
   return (
-    <Container>
-      <InnerContainer>
-        <Heading
-          onClick={() => {
-            router.push("/");
-          }}
-        >
-          Shoppie
-        </Heading>
-        <Stack direction="row" spacing={3}>
-          {navbar_context.nav_links.map((link) => (
-            <Link
-              key={link._id}
-              onClick={() => {
-                if (link.name !== "Logout") {
+    <>
+      <LogoutConfimationDialog
+        open={openLogoutConfirmationDialog}
+        setOpen={setOpenLogoutConfirmationDialog}
+        setUserDetails={setUserDetails}
+      />
+      <UserDetailsModel
+        open={open}
+        setOpen={setOpen}
+        userDetails={userDetails}
+      />
+      <Container>
+        <InnerContainer>
+          <Heading
+            onClick={() => {
+              router.push("/");
+            }}
+          >
+            Shoppie
+          </Heading>
+          <Stack direction="row" spacing={3}>
+            {navbar_context.nav_links.map((link) => (
+              <Link
+                key={link._id}
+                onClick={() => {
                   router.push(link.path);
-                } else {
+                }}
+              >
+                {link.name}
+              </Link>
+            ))}
+            {Object.keys(userDetails).length > 0 && (
+              <Link
+                onClick={() => {
                   handleLogoutBtn();
-                }
-              }}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </Stack>
-        <Stack direction="row" alignItems="center">
-          <FaUserCircle style={{ fontSize: "20px", marginRight: "8px" }} />
-          <Typography>Aryan</Typography>
-        </Stack>
-      </InnerContainer>
-    </Container>
+                }}
+              >
+                Logout
+              </Link>
+            )}
+          </Stack>
+          <span>
+            {Object.keys(userDetails).length > 0 && (
+              <Stack
+                direction="row"
+                alignItems="center"
+                sx={{ cursor: "pointer" }}
+                onClick={handleOpen}
+              >
+                <FaUserCircle
+                  style={{ fontSize: "20px", marginRight: "8px" }}
+                />
+                <Typography>{userDetails.name}</Typography>
+              </Stack>
+            )}
+          </span>
+        </InnerContainer>
+      </Container>
+    </>
   );
 }
 

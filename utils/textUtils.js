@@ -10,10 +10,5 @@ export const navbar_context = {
       name: "Products",
       path: "/products",
     },
-    {
-      _id: "5ae498c1-697d-4fcc-89be-2e7279a12728",
-      name: "Logout",
-      path: "/#",
-    },
   ],
 };

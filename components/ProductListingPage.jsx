@@ -10,7 +10,6 @@ const Container = styled(Box)(({ theme }) => ({
 }));
 
 const InnerContainer = styled(Box)(({ theme }) => ({
-  maxWidth: "1240px",
   width: "90%",
   height: "100%",
   margin: "auto",

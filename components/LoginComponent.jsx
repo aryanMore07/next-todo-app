@@ -1,7 +1,7 @@
 import { Box, Button, Grid2, TextField, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const Container = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -40,7 +40,7 @@ const FooterText = styled(Typography)(({ theme }) => ({
   },
 }));
 
-function LoginComponent({ setOpen }) {
+function LoginComponent({ setOpen, setSnackbarStatus }) {
   const router = useRouter();
   const [users, setUsers] = useState(() => {
     const users_list = localStorage.getItem("users");

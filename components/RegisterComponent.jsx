@@ -13,6 +13,7 @@ import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { MuiFileInput } from "mui-file-input";
+import { v4 as uuid } from "uuid";
 
 const Container = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -61,6 +62,7 @@ function RegisterComponent({ setOpen, setSnackbarStatus }) {
     return users_list ? JSON.parse(users_list) : [];
   });
   const [registerDetails, setRegisterDetails] = useState({
+    _id: uuid(),
     name: "",
     email: "",
     password: "",
